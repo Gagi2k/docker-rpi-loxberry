@@ -12,18 +12,6 @@ RUN adduser --quiet --home /opt/loxberry --no-create-home --disabled-password --
     echo "loxberry:loxberry" | chpasswd && \   
     #
     # **************************
-    # Edit /etc/visudoers
-    # **************************
-    echo "loxberry ALL = NOPASSWD: /usr/sbin/ntpdate" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /bin/date" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /sbin/iwlist" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /usr/bin/lshw" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /sbin/poweroff" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /sbin/reboot" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers && \
-    echo "loxberry ALL = NOPASSWD: /usr/bin/dpkg" >> /etc/sudoers && \
-    #
-    # **************************
     # Add RaspberryPi repository for apt
     # **************************
     echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list.d/backports.list && \
@@ -38,6 +26,18 @@ RUN adduser --quiet --home /opt/loxberry --no-create-home --disabled-password --
     DIRS=`cat /tmp/x86.txt`; for EXCLUDE in `cat /tmp/raspi-filter.txt`; do DIRS=`echo $DIRS | sed "s/$EXCLUDE//g"`;done; echo $DIRS > /tmp/filtered.txt && \
     apt-get install -y --no-install-recommends libdevice-serialport-perl git && \
     apt-get install -y --no-install-recommends $(cat /tmp/filtered.txt) && \
+    #
+    # **************************
+    # Edit /etc/visudoers
+    # **************************
+    echo "loxberry ALL = NOPASSWD: /usr/sbin/ntpdate" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /bin/date" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /sbin/iwlist" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /usr/bin/lshw" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /sbin/poweroff" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /sbin/reboot" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers && \
+    echo "loxberry ALL = NOPASSWD: /usr/bin/dpkg" >> /etc/sudoers && \
     #
     # **************************
     # Install Perl modules

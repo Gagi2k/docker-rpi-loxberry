@@ -24,4 +24,3 @@ raspberrypi-kernel
 raspbian-archive-keyring
 raspi-config
 raspi-copies-and-fills
-sudo
