@@ -1,6 +1,7 @@
-FROM resin/rpi-raspbian:jessie
+FROM debian:jessie 
+COPY raspi-filter.txt /tmp/raspi-filter.txt
 
-LABEL maintainer="Michael Miklis / <info@michaelmiklis.de>"
+LABEL maintainer="Dominik Holland / <dominik.holland@googlemail.com>"
 
 #RUN [ "cross-build-start" ]
 
@@ -25,16 +26,18 @@ RUN adduser --quiet --home /opt/loxberry --no-create-home --disabled-password --
     # **************************
     # Add RaspberryPi repository for apt
     # **************************
-    rm /etc/apt/sources.list.d/raspi.list && \
-    echo "deb http://archive.raspberrypi.org/debian/ jessie main ui" >> /etc/apt/sources.list.d/raspi.list  && \
+    echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list.d/backports.list && \
     apt-get -y update && \
+    apt-get -y install curl && \
     #
     # **************************
     # Install prerequisites packages
     # **************************
     curl https://raw.githubusercontent.com/mschlenstedt/Loxberry/master/packages.txt > /tmp/packages.txt && \
+    echo $(awk 'p0 {print p0} {p0 = ($1 == "ii") ? $2 : ""}' /tmp/packages.txt) | sed -e 's/:armhf//g' > /tmp/x86.txt && \
+    DIRS=`cat /tmp/x86.txt`; for EXCLUDE in `cat /tmp/raspi-filter.txt`; do DIRS=`echo $DIRS | sed "s/$EXCLUDE//g"`;done; echo $DIRS > /tmp/filtered.txt && \
     apt-get install -y --no-install-recommends libdevice-serialport-perl git && \
-    apt-get install -y --no-install-recommends $(awk 'p0 {print p0} {p0 = ($1 == "ii") ? $2 : ""}' /tmp/packages.txt) && \
+    apt-get install -y --no-install-recommends $(cat /tmp/filtered.txt) && \
     #
     # **************************
     # Install Perl modules
