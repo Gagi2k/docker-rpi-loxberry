@@ -44,5 +44,8 @@ ln -s /opt/loxberry/system/ssmtp /etc/ssmtp
 # Start loxberryinit.sh script
 ./opt/loxberry/sbin/loxberryinit.sh
 
+# Start cron daemon
+sudo /etc/init.d/cron start
+
 # Start Apache2
 /usr/sbin/apache2ctl -D FOREGROUND
